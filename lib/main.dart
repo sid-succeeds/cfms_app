@@ -35,12 +35,13 @@ class _ReviewFormState extends State<ReviewForm> {
   String _message = '';
   bool _isLoading = false;
   int _selectedIndex = 0;
+  String _appBarTitle = 'Review Form';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Review Form'),
+        title: Text(_appBarTitle),
       ),
       body: _selectedIndex == 0 ? _buildReviewForm() : _buildAdminPage(),
       bottomNavigationBar: BottomNavigationBar(
@@ -194,6 +195,7 @@ class _ReviewFormState extends State<ReviewForm> {
   void _onTabSelected(int index) {
     setState(() {
       _selectedIndex = index;
+      _appBarTitle = index == 0 ? 'Review Form' : 'Admin Operations';
     });
   }
 }
