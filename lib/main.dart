@@ -1,3 +1,4 @@
+import 'package:cfms_app/utils/AppConfig.dart';
 import 'package:cfms_app/utils/LoadingOverlay.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -156,7 +157,7 @@ class _ReviewFormState extends State<ReviewForm> {
         "submittedDate": submittedDate,
       };
 
-      var url = Uri.parse('https://localhost:7045/v2/Feedback');
+      var url = Uri.parse('https://localhost:7045/v2/Feedback?apiKey=${AppConfig.apiKey}');
 
       try {
         var response = await http.post(
