@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 
+import 'UserListScreen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -264,7 +266,11 @@ class _ReviewFormState extends State<ReviewForm> {
         );
 
         if (response.statusCode == 200) {
-          _showToast("Login successful!");
+          // Navigate to user list screen upon successful login
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UserListScreen()),
+          );
         } else {
           _showToast("Login failed. Please check your credentials.");
         }
@@ -291,7 +297,7 @@ class _ReviewFormState extends State<ReviewForm> {
   void _onTabSelected(int index) {
     setState(() {
       _selectedIndex = index;
-      _appBarTitle = index == 0 ? 'Review Form' : 'Admin Operations';
+      _appBarTitle = index == 0 ? 'Review Form' : 'Admin Login';
     });
   }
 }
