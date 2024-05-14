@@ -37,6 +37,7 @@ dependencies:
   http: ^0.13.3
   uuid: ^3.0.4
   fluttertoast: ^8.0.8
+  email_validator: ^2.0.1
 
 dev_dependencies:
   flutter_test:
