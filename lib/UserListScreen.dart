@@ -9,11 +9,13 @@ class UserListScreen extends StatefulWidget {
 
 class _UserListScreenState extends State<UserListScreen> {
   List<Map<String, dynamic>> _users = [];
+  List<Map<String, dynamic>> _reviews = [];
 
   @override
   void initState() {
     super.initState();
     _fetchUsers();
+    _fetchReviews();
   }
 
   Future<void> _fetchUsers() async {
@@ -30,6 +32,23 @@ class _UserListScreenState extends State<UserListScreen> {
       }
     } catch (e) {
       print('Error fetching users: $e');
+    }
+  }
+
+  Future<void> _fetchReviews() async {
+    var url = Uri.parse('https://localhost:7045/v2/Feedback');
+    try {
+      var response = await http.get(url, headers: {"accept": "application/json"});
+      if (response.statusCode == 200) {
+        List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _reviews = List<Map<String, dynamic>>.from(data);
+        });
+      } else {
+        throw Exception('Failed to fetch reviews');
+      }
+    } catch (e) {
+      print('Error fetching reviews: $e');
     }
   }
 
@@ -70,6 +89,15 @@ class _UserListScreenState extends State<UserListScreen> {
   }
 
   Widget _buildReviews() {
-    return Container(); // Blank screen for reviews
+    return ListView.builder(
+      itemCount: _reviews.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(_reviews[index]['subject']),
+          subtitle: Text(_reviews[index]['message']),
+        );
+      },
+    );
   }
+
 }
