@@ -95,6 +95,7 @@ class _UserListScreenState extends State<UserListScreen> {
               return ListTile(
                 title: Text('${_users[index]['firstName']} ${_users[index]['lastName']}'),
                 subtitle: Text(_users[index]['email']),
+                onTap: () => _showUserDetailsModal(context, _users[index]),
               );
             },
           ),
@@ -108,8 +109,6 @@ class _UserListScreenState extends State<UserListScreen> {
       ],
     );
   }
-
-
 
   Widget _buildReviews() {
     return ListView.builder(
@@ -243,6 +242,80 @@ class _UserListScreenState extends State<UserListScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error adding user: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _showUserDetailsModal(BuildContext context, Map<String, dynamic> user) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('User Details'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildReadOnlyTextField('First Name', user['firstName']),
+                _buildReadOnlyTextField('Last Name', user['lastName']),
+                _buildReadOnlyTextField('Email', user['email']),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                _deleteUser(user['id']);
+                Navigator.of(context).pop();
+              },
+              child: Text('Delete'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildReadOnlyTextField(String label, String value) {
+    return TextField(
+      readOnly: true,
+      controller: TextEditingController(text: value),
+      decoration: InputDecoration(
+        labelText: label,
+        disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+      ),
+    );
+  }
+
+  void _deleteUser(String userId) async {
+    var url = Uri.parse('https://localhost:7045/v2/User/$userId');
+    try {
+      var response = await http.delete(url);
+      if (response.statusCode == 200) {
+        // User deleted successfully
+        _fetchUsers(); // Refresh user list
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('User deleted successfully.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        throw Exception('Failed to delete user: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting user: $e'),
           backgroundColor: Colors.red,
         ),
       );
