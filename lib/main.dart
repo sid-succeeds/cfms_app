@@ -297,7 +297,7 @@ class _ReviewFormState extends State<ReviewForm> {
   void _onTabSelected(int index) {
     setState(() {
       _selectedIndex = index;
-      _appBarTitle = index == 0 ? 'Review Form' : 'Admin Operations';
+      _appBarTitle = index == 0 ? 'Review Form' : 'Admin Login';
     });
   }
 }

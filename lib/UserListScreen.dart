@@ -35,19 +35,41 @@ class _UserListScreenState extends State<UserListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('User List'),
-      ),
-      body: ListView.builder(
-        itemCount: _users.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('${_users[index]['firstName']} ${_users[index]['lastName']}'),
-            subtitle: Text(_users[index]['email']),
-          );
-        },
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Admin Operations'),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'Users'),
+              Tab(text: 'Reviews'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _buildUserList(),
+            _buildReviews(), // This can be a blank screen or any other content for reviews
+          ],
+        ),
       ),
     );
+  }
+
+  Widget _buildUserList() {
+    return ListView.builder(
+      itemCount: _users.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text('${_users[index]['firstName']} ${_users[index]['lastName']}'),
+          subtitle: Text(_users[index]['email']),
+        );
+      },
+    );
+  }
+
+  Widget _buildReviews() {
+    return Container(); // Blank screen for reviews
   }
 }
